@@ -1,31 +1,41 @@
-import { PrismaClient } from "@prisma/client";
+import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json();
-    // const hashedPassword = bcrypt.hashSync(password, 10);
-
-    const user = await prisma.user.create({
+    const { name, email, password } = await request.json();
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const existtingUserEmail = await db.user.findUnique({
+      where: { email: email },
+    });
+    if (existtingUserEmail) {
+      return NextResponse.json(
+        { user: null, message: "This user is used already" },
+        { status: 409 }
+      );
+    }
+    const user = await db.user.create({
       data: {
-        email,
-        password,
         name,
+        email,
+        password:hashedPassword,
       },
     });
-    return Response.json({ message: "User created", user });
+    
+    return NextResponse.json({ message: "User created", user });
   } catch (error) {
-    return Response.json({ error: "User could not be created" });
+    return NextResponse.json({ error: "User could not be created" });
   }
 }
 
 export async function GET() {
   try {
-    return Response.json(await prisma.user.findMany());
+    return NextResponse.json(await db.user.findMany());
   } catch (error) {
-    return new Response(error as BodyInit, {
+    return new NextResponse(error as BodyInit, {
       status: 404,
     });
   }

@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db } from "@/lib/db";
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   return Response.json(
-    await prisma.post.findUnique({
+    await db.post.findUnique({
       where: { id: Number(params.id) },
     })
   );
@@ -19,7 +17,7 @@ export async function PUT(
   try {
     const { title, desc, content } = await request.json();
     return Response.json(
-      await prisma.post.update({
+      await db.post.update({
         where: { id: Number(params.id) },
         data: { title, desc, content },
       })
@@ -36,7 +34,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const postId = Number(params.id);
-  const deletePost = await prisma.post.delete({
+  const deletePost = await db.post.delete({
     where: {
       id: postId,
     },

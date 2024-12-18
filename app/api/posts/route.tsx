@@ -1,15 +1,13 @@
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { db } from "@/lib/db";
 
 
 export async function GET(){
-    const getall = await prisma.post.findMany()
+    const getall = await db.post.findMany()
     return Response.json(getall)
 }
 export async function POST(req:Request){
    try{ const {title,desc,content} = await req.json()
-    const newPost = await prisma.post.create({
+    const newPost = await db.post.create({
         data:{
             title,
             desc,
