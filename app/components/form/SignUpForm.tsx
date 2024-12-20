@@ -58,7 +58,7 @@ export default function SignUpForm() {
       }),
     });
     if (response.ok) {
-      router.push("/");
+      router.push("/sign-in");
     } else {
       console.error("Subscription failed");
     }
