@@ -40,7 +40,8 @@ export default function SignInForm() {
       if (signInData?.error) {
         console.log(signInData.error);
       } else {
-        router.push("/");
+        router.refresh()
+        router.push("/admin");
       }
     } catch (error) {
       console.log("error", error);
@@ -50,7 +51,7 @@ export default function SignInForm() {
   return (
     <div>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div>
+        <div className="space-y-3 pt-12">
           <input
             id="email"
             type="email"
