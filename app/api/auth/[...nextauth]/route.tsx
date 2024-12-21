@@ -35,7 +35,10 @@ export const authOptions: NextAuthOptions = {
         }
         if (
           existtingUserEmail &&
-          (await bcrypt.compare(credentials.password, existtingUserEmail.password))
+          (await bcrypt.compare(
+            credentials.password,
+            existtingUserEmail.password
+          ))
         ) {
           return {
             id: `${existtingUserEmail.id}`,

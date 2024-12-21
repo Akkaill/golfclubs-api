@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import React from "react";
+import {useToast} from"@/hooks/use-toast"
 
 export const SignupFormSchema = z
   .object({
@@ -32,6 +33,7 @@ export const SignupFormSchema = z
 export default function SignUpForm() {
   const router = useRouter();
   const { pending } = useFormStatus();
+  const{toast}=useToast();
   const {
     register,
     handleSubmit,
@@ -60,8 +62,11 @@ export default function SignUpForm() {
     if (response.ok) {
       router.push("/sign-in");
     } else {
-      console.error("Subscription failed");
-    }
+      toast({
+        title:"Error",
+        description:"Something went wrong",
+        variant:"destructive"
+      })
   };
 
   return (

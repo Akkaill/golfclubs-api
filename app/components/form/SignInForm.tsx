@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 // import { useState } from "react";
 
 export const LoginFormSchema = z.object({
@@ -16,8 +17,8 @@ export const LoginFormSchema = z.object({
 });
 
 export default function SignInForm() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const { toast } = useToast();
+
   const router = useRouter();
   const { pending } = useFormStatus();
 
@@ -31,16 +32,20 @@ export default function SignInForm() {
 
   const onSubmit = async (value: z.infer<typeof LoginFormSchema>) => {
     try {
-      const signInData = await signIn('credentials', {
+      const signInData = await signIn("credentials", {
         redirect: false,
         email: value.email,
         password: value.password,
       });
 
       if (signInData?.error) {
-        console.log(signInData.error);
+        toast({
+          title: "Error",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
       } else {
-        router.refresh()
+        router.refresh();
         router.push("/admin");
       }
     } catch (error) {
@@ -52,23 +57,13 @@ export default function SignInForm() {
     <div>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-3 pt-12">
-          <input
-            id="email"
-            type="email"
-            // onChange={(e) => setEmail(e.target.value)}
-            {...form.register("email")}
-          />
+          <input id="email" {...form.register("email")} />
           {form.formState.errors.email?.message && (
             <p>{form.formState.errors.email.message}</p>
           )}
         </div>
         <div>
-          <input
-            id="password"
-            type="password"
-            // onChange={(e) => setPassword(e.target.value)}
-            {...form.register("password")}
-          />
+          <input id="password" type="password" {...form.register("password")} />
           {form.formState.errors.password?.message && (
             <p>{form.formState.errors.password.message}</p>
           )}
