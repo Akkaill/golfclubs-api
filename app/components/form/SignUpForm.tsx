@@ -1,11 +1,11 @@
 "use client";
-import {  z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import React from "react";
-import {useToast} from"@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 
 export const SignupFormSchema = z
   .object({
@@ -33,7 +33,7 @@ export const SignupFormSchema = z
 export default function SignUpForm() {
   const router = useRouter();
   const { pending } = useFormStatus();
-  const{toast}=useToast();
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
@@ -48,8 +48,8 @@ export default function SignUpForm() {
   });
   const onSubmit = async (values: z.infer<typeof SignupFormSchema>) => {
     const response = await fetch("/api/auth/signup", {
-        method:"POST",
- 
+      method: "POST",
+
       headers: {
         "Content-Type": "application/json",
       },
@@ -63,15 +63,15 @@ export default function SignUpForm() {
       router.push("/sign-in");
     } else {
       toast({
-        title:"Error",
-        description:"Something went wrong",
-        variant:"destructive"
-      })
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    }
   };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-          <div>
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full pt-12">
+      <div>
         <input {...register("name")} />
         {errors.name?.message && <p>{errors.name?.message}</p>}
       </div>
@@ -85,13 +85,14 @@ export default function SignUpForm() {
         <input {...register("password")} type="password" />
         {errors.password?.message && <p>{errors.password?.message}</p>}
       </div>
-    
+
       <div>
         {" "}
         <input {...register("confirmPassword")} type="password" />
-        {errors.confirmPassword?.message && <p>{errors.confirmPassword?.message}</p>}
+        {errors.confirmPassword?.message && (
+          <p>{errors.confirmPassword?.message}</p>
+        )}
       </div>
-    
 
       <button type="submit" disabled={pending}>
         Sign Up

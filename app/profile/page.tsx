@@ -1,20 +1,30 @@
- 'use client'
-  import { useEffect } from "react"
-  import { useRouter } from "next/navigation"
-  import { useSession } from "next-auth/react"
-  export default function profile(){
-    const router = useRouter()
-    const {data:status,session}=useSession()
+"use client";
 
-    useEffect(()=>{
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+export default function Profile() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  console.log('status',status);
+  console.log('session',session);
 
-        if(status==='unauthenticated'){
-            router.push('/')
-        }
-    },[router,status])
-    return(status==='authenticated'&&{
+  useEffect(()=>{
+
+      if(status==='unauthenticated'){
+          router.push('/')
+      }
+  },[router,status])
+  return (
+
+        status==='authenticated'&&
+          session.user &&(
+            <div className="flex pt-20">
+              <p>Welcome {session.user.name}</p>
+            </div>
+          )
+
         
-    }
-        <div></div>
-    )
-  }
+     
+  );
+}

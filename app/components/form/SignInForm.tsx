@@ -18,7 +18,6 @@ export const LoginFormSchema = z.object({
 
 export default function SignInForm() {
   const { toast } = useToast();
-
   const router = useRouter();
   const { pending } = useFormStatus();
 
@@ -46,7 +45,7 @@ export default function SignInForm() {
         });
       } else {
         router.refresh();
-        router.push("/admin");
+        router.push("/profile");
       }
     } catch (error) {
       console.log("error", error);

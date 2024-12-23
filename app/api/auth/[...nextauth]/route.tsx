@@ -5,16 +5,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "../../../../lib/db";
 import bcrypt from "bcrypt";
 
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db),
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/sign-in",
-  },
 
+export const authOptions= {
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -41,9 +33,10 @@ export const authOptions: NextAuthOptions = {
           ))
         ) {
           return {
-            id: `${existtingUserEmail.id}`,
+            id: existtingUserEmail.id,
             name: existtingUserEmail.name,
             email: existtingUserEmail.email,
+            role: existtingUserEmail.role,
           };
         } else {
           throw new Error("Invalid email or password");
@@ -51,23 +44,34 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  adapter: PrismaAdapter(db),
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/sign-in",
+  },
+
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        return {
-          ...token,
-          name: user.name,
-        };
-      }
-      return token;
+   async jwt ({ token, user }) {
+  if(user){
+    
+     token.id=user.id
+     token.role=user.role
+ 
+  }
+  return token
     },
-    async session({ session, token }) {
+   async session ({ session, token })  {
       return {
         ...session,
         user: {
           ...session.user,
           name: token.name,
+          role: token.role,
         },
+      
       };
     },
   },
