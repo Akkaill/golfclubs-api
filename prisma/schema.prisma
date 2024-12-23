@@ -18,6 +18,7 @@ model Post{
   title String
   desc String
   content String?
+  category String?
   createdAt DateTime @default(now())
 }
 
@@ -27,6 +28,7 @@ model User {
   email     String   @unique
   password  String
   image     String?
+  role      String  @default("member")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
