@@ -15,11 +15,11 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { title, desc, content } = await request.json();
+    const { title, desc, content, category } = await request.json();
     return Response.json(
       await db.post.update({
         where: { id: Number(params.id) },
-        data: { title, desc, content },
+        data: { title, desc, content,category },
       })
     );
   } catch (error) {
